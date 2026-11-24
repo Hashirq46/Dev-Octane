@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Recruiter Signup — JobPortal{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7 col-lg-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <span class="badge bg-success-subtle text-success mb-2 px-3 py-2 fs-6">Employer / Recruiter</span>
+                    <h3 class="fw-bold">Register Company Account</h3>
+                    <p class="text-muted">Hire top talent across Pakistan. Please register using your official company email.</p>
+                </div>
+
+                <div class="alert alert-info py-2 small">
+                    <i class="bi bi-info-circle-fill me-1"></i>
+                    <strong>Note:</strong> Public email addresses (Gmail, Yahoo, Outlook, Hotmail, etc.) are strictly prohibited.
+                </div>
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for err in form.non_field_errors %}{{ err }}<br>{% endfor %}
+                    </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.email.id_for_label }}" class="form-label fw-semibold">Official Company Email *</label>
+                        {{ form.email }}
+                        <div class="form-text">Example: hr@yourcompany.com, name@business.pk</div>
+                        {% if form.email.errors %}
+                            <div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="{{ form.password.id_for_label }}" class="form-label fw-semibold">Password *</label>
+                        {{ form.password }}
+                        {% if form.password.errors %}
+                            <div class="text-danger small mt-1">{{ form.password.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success btn-lg">Create Recruiter Account</button>
+                    </div>
+                </form>
+
+                <hr class="my-4">
+                <div class="text-center">
+                    <span class="text-muted">Already registered?</span>
+                    <a href="{% url 'login' %}" class="fw-semibold text-decoration-none ms-1">Sign in</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

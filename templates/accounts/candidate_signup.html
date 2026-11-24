@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Candidate Signup — JobPortal{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7 col-lg-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <span class="badge bg-primary-subtle text-primary mb-2 px-3 py-2 fs-6">Job Seeker</span>
+                    <h3 class="fw-bold">Sign Up with your CV</h3>
+                    <p class="text-muted">Upload your CV and our AI will automatically parse and fill your profile details for review.</p>
+                </div>
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for err in form.non_field_errors %}{{ err }}<br>{% endfor %}
+                    </div>
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.full_name.id_for_label }}" class="form-label fw-semibold">Full Name *</label>
+                        {{ form.full_name }}
+                        {% if form.full_name.errors %}
+                            <div class="text-danger small mt-1">{{ form.full_name.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.email.id_for_label }}" class="form-label fw-semibold">Email address *</label>
+                        {{ form.email }}
+                        <div class="form-text">We'll send a confirmation link to this email.</div>
+                        {% if form.email.errors %}
+                            <div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.password.id_for_label }}" class="form-label fw-semibold">Password *</label>
+                        {{ form.password }}
+                        {% if form.password.errors %}
+                            <div class="text-danger small mt-1">{{ form.password.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.cv.id_for_label }}" class="form-label fw-semibold">Upload CV (PDF, DOCX, JPG, PNG &lt; 5MB) *</label>
+                        {{ form.cv }}
+                        <div class="form-text">Your CV is securely stored in private storage and never exposed publicly.</div>
+                        {% if form.cv.errors %}
+                            <div class="text-danger small mt-1">{{ form.cv.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="form-check">
+                            {{ form.consent }}
+                            <label class="form-check-label small" for="{{ form.consent.id_for_label }}">
+                                I agree that my CV will be processed automatically by an external AI service to fill my profile in accordance with the <a href="{% url 'privacy' %}" target="_blank">Privacy Policy</a>.
+                            </label>
+                        </div>
+                        {% if form.consent.errors %}
+                            <div class="text-danger small mt-1">{{ form.consent.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">Create Candidate Account</button>
+                    </div>
+                </form>
+
+                <hr class="my-4">
+                <div class="text-center">
+                    <span class="text-muted">Already have an account?</span>
+                    <a href="{% url 'login' %}" class="fw-semibold text-decoration-none ms-1">Sign in</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

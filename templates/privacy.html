@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Privacy Policy — JobPortal.pk{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="card shadow-sm border-0 mb-5">
+            <div class="card-body p-4 p-md-5">
+                <h1 class="fw-bold mb-3">Privacy Policy</h1>
+                <p class="text-muted">Last updated: October 2026</p>
+
+                <hr class="my-4">
+
+                <h4 class="fw-bold text-dark mt-4">1. Overview</h4>
+                <p class="text-secondary leading-relaxed">
+                    JobPortal.pk is committed to protecting the privacy and personal data of all candidates and hiring recruiters. This Privacy Policy details how we collect, store, process, and safeguard the information you provide across our platform.
+                </p>
+
+                <h4 class="fw-bold text-dark mt-4">2. Document Processing and External AI Services</h4>
+                <div class="alert alert-info border-info">
+                    <strong>Notice Regarding AI Processing:</strong> By registering as a candidate and uploading a CV, or by submitting company verification certificates as a recruiter, you explicitly consent to having those documents automatically parsed and extracted by an external AI provider (Anthropic Claude API).
+                </div>
+                <p class="text-secondary">
+                    Documents uploaded to our system are processed strictly for extracting structured form data (e.g. contact details, experience, skills, NTN, and company name) to prefill your review form.
+                </p>
+                <ul>
+                    <li><strong>No Automatic Saving:</strong> No extracted data is written to your active profile or company records until you review, edit, and click "Submit".</li>
+                    <li><strong>Private Storage:</strong> Uploaded resumes and business certificates are stored in isolated private storage, completely inaccessible via public web URLs. Only the document owner, recruiting teams you apply to, and platform compliance administrators have access.</li>
+                    <li><strong>Retention & Cleanup:</strong> Temporary unsubmitted drafts and their uploaded files are automatically expunged after 14 days.</li>
+                </ul>
+
+                <h4 class="fw-bold text-dark mt-4">3. Data Collected</h4>
+                <p class="text-secondary">We collect and process:</p>
+                <ul>
+                    <li><strong>Candidate Information:</strong> Name, verified login email, phone number, city, professional headline, skills, work history, and educational background.</li>
+                    <li><strong>Recruiter & Company Information:</strong> Official company email, company name, FBR National Tax Number (NTN), SECP Corporate Universal Identification Number (CUIN), business address, and registration certificates.</li>
+                </ul>
+
+                <h4 class="fw-bold text-dark mt-4">4. Compliance & Verification Checks</h4>
+                <p class="text-secondary">
+                    Recruiter credentials are verified against local copies of FBR's Active Taxpayer List (ATL) and reviewed by manual administrative compliance officers against SECP official registries. We do not scrape unauthorized government interfaces.
+                </p>
+
+                <h4 class="fw-bold text-dark mt-4">5. Contact</h4>
+                <p class="text-secondary">
+                    If you have questions regarding data retention or wish to exercise your rights to delete your profile and documents, please contact <a href="mailto:privacy@jobportal.pk">privacy@jobportal.pk</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

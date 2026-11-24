@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}JobPortal.pk — Find Jobs in Pakistan{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="row align-items-center py-5 mb-4">
+    <div class="col-lg-7 text-center text-lg-start mb-4 mb-lg-0">
+        <span class="badge bg-primary-subtle text-primary mb-3 px-3 py-2 fs-6">
+            <i class="bi bi-patch-check-fill me-1"></i>Verified Employers in Pakistan
+        </span>
+        <h1 class="display-4 fw-bold mb-3">Find Your Next Dream Job in Pakistan</h1>
+        <p class="lead text-muted mb-4">
+            Upload your CV and let our AI autofill your application. Connect directly with government-registered & SECP-verified companies.
+        </p>
+        <div class="d-flex flex-wrap gap-2 justify-content-center justify-content-lg-start">
+            <a href="{% url 'candidate_signup' %}" class="btn btn-primary btn-lg px-4">
+                <i class="bi bi-file-earmark-person me-2"></i>Sign Up with CV
+            </a>
+            <a href="{% url 'recruiter_signup' %}" class="btn btn-outline-success btn-lg px-4">
+                <i class="bi bi-building me-2"></i>Employer Registration
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <!-- Quick Search Card -->
+        <div class="card shadow border-0 p-4 bg-white rounded-4">
+            <h4 class="fw-bold mb-3"><i class="bi bi-search text-primary me-2"></i>Quick Job Search</h4>
+            <form method="get" action="{% url 'job_list' %}">
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold text-muted">Keywords, Skill, or Title</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" name="q" class="form-control border-start-0" placeholder="e.g. Python, Graphic Designer, Accountant">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label small fw-semibold text-muted">City</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-geo-alt text-muted"></i></span>
+                        <input type="text" name="city" class="form-control border-start-0" placeholder="e.g. Lahore, Karachi, Islamabad">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">Search {{ total_jobs }} Jobs</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Popular Cities Pills -->
+{% if cities %}
+    <div class="mb-5 text-center">
+        <span class="text-muted small fw-semibold me-2">Popular Cities:</span>
+        {% for c in cities %}
+            <a href="{% url 'job_list' %}?city={{ c }}" class="btn btn-sm btn-light border rounded-pill me-1 mb-1">
+                <i class="bi bi-geo-alt-fill text-danger me-1"></i>{{ c }}
+            </a>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<!-- Latest Jobs Section -->
+<div class="mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">Latest Job Openings</h3>
+            <p class="text-muted mb-0">Explore fresh opportunities from verified Pakistani organizations</p>
+        </div>
+        <a href="{% url 'job_list' %}" class="btn btn-outline-primary fw-semibold">View All Jobs &rarr;</a>
+    </div>
+
+    <div class="row g-3">
+        {% for job in latest_jobs %}
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm border-0 job-card">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="fw-bold mb-1">
+                                <a href="{% url 'job_detail' job.id %}" class="text-dark text-decoration-none">
+                                    {{ job.title }}
+                                </a>
+                            </h5>
+                            <span class="badge bg-primary-subtle text-primary">{{ job.get_job_type_display }}</span>
+                        </div>
+                        <p class="text-muted small mb-3">
+                            <i class="bi bi-building me-1"></i>
+                            <strong>{{ job.company_name|default:"Verified Company" }}</strong>
+                            {% if job.recruiter.is_verified_recruiter %}
+                                <span class="badge bg-success ms-1" title="NTN and SECP verified">✔ Verified</span>
+                            {% endif %}
+                        </p>
+                        <div class="d-flex flex-wrap gap-2 text-muted small mb-3">
+                            <span><i class="bi bi-geo-alt me-1"></i>{{ job.city }}</span>
+                            {% if job.salary_min or job.salary_max %}
+                                <span>&bull;</span>
+                                <span><i class="bi bi-cash me-1"></i>PKR {{ job.salary_min|default:"-" }} - {{ job.salary_max|default:"-" }}</span>
+                            {% endif %}
+                            {% if job.experience_required %}
+                                <span>&bull;</span>
+                                <span><i class="bi bi-clock-history me-1"></i>{{ job.experience_required }}+ yrs exp</span>
+                            {% endif %}
+                        </div>
+                        {% if job.skills %}
+                            <div class="mb-3">
+                                {% for s in job.skills.split %}
+                                    <span class="badge bg-light text-secondary border me-1">{{ s|cut:"," }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                            <span class="text-muted small">{{ job.created_at|timesince }} ago</span>
+                            <a href="{% url 'job_detail' job.id %}" class="btn btn-sm btn-outline-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center py-5">
+                <p class="text-muted lead">No active job listings found right now.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

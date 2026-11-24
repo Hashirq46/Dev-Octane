@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Processing Company Documents — JobPortal{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7 col-lg-6 text-center">
+        <div class="card shadow-sm border-0 py-5 px-4">
+            <div class="card-body">
+                <div class="spinner-border text-success mb-4" style="width: 3.5rem; height: 3.5rem;" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <h3 class="fw-bold mb-3">Processing Company Documents</h3>
+                <p class="text-muted mb-4">
+                    Our AI is extracting company credentials from your NTN and SECP certificates to autofill your verification review form...
+                </p>
+                <div class="progress mb-3" style="height: 8px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 100%"></div>
+                </div>
+                <p class="small text-muted">
+                    This page will automatically refresh as soon as processing completes.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function checkStatus() {
+        // Poll current page by reloading or checking drafts
+        setTimeout(function() {
+            window.location.reload();
+        }, 2500);
+    }
+    checkStatus();
+</script>
+{% endblock %}

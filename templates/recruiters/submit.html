@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Verification Documents — JobPortal{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <span class="badge bg-primary-subtle text-primary mb-2 px-3 py-2 fs-6">Step 1 of 2</span>
+                    <h3 class="fw-bold">Upload Company Documents</h3>
+                    <p class="text-muted">
+                        To maintain safety and quality, all hiring companies must be verified. Our AI will automatically extract details from your certificates to autofill your review form.
+                    </p>
+                </div>
+
+                <div class="alert alert-secondary small mb-4">
+                    <i class="bi bi-shield-lock-fill me-1 text-primary"></i>
+                    <strong>Private Storage:</strong> Your certificates are encrypted and stored in private storage. They will only be accessible to authorized compliance staff.
+                </div>
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for err in form.non_field_errors %}{{ err }}<br>{% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="mb-4">
+                        <label for="{{ form.ntn_cert.id_for_label }}" class="form-label fw-semibold">
+                            FBR NTN Registration Certificate <span class="text-danger">*</span>
+                        </label>
+                        {{ form.ntn_cert }}
+                        <div class="form-text">PDF, DOCX, JPG, PNG (Max 5 MB). Shows your company or taxpayer NTN.</div>
+                        {% if form.ntn_cert.errors %}
+                            <div class="text-danger small mt-1">{{ form.ntn_cert.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="{{ form.secp_cert.id_for_label }}" class="form-label fw-semibold">
+                            SECP Certificate of Incorporation / Registration
+                        </label>
+                        {{ form.secp_cert }}
+                        <div class="form-text">Required for Pvt Ltd, Public Ltd, and SMCs. Optional for Sole Proprietorships.</div>
+                        {% if form.secp_cert.errors %}
+                            <div class="text-danger small mt-1">{{ form.secp_cert.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="form-check">
+                            {{ form.consent }}
+                            <label class="form-check-label small" for="{{ form.consent.id_for_label }}">
+                                I agree that uploaded certificates will be processed automatically by an external AI service for verification autofill in accordance with the <a href="{% url 'privacy' %}" target="_blank">Privacy Policy</a>.
+                            </label>
+                        </div>
+                        {% if form.consent.errors %}
+                            <div class="text-danger small mt-1">{{ form.consent.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-arrow-right-circle me-1"></i>Upload & Continue to Review
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

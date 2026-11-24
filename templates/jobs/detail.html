@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}{{ job.title }} at {{ job.company_name|default:"Company" }} — JobPortal{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-9">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body p-4 p-md-5">
+                <!-- Header -->
+                <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+                    <div>
+                        <span class="badge bg-primary-subtle text-primary mb-2">{{ job.get_job_type_display }}</span>
+                        {% if not job.is_active %}
+                            <span class="badge bg-secondary mb-2 ms-1">Closed</span>
+                        {% endif %}
+                        <h2 class="fw-bold mb-1">{{ job.title }}</h2>
+                        <h5 class="text-muted mb-0">
+                            <i class="bi bi-building me-1"></i>
+                            <strong>{{ job.company_name|default:"Company" }}</strong>
+                            {% if job.recruiter.is_verified_recruiter %}
+                                <span class="badge bg-success ms-1" title="NTN and SECP verified">✔ Verified</span>
+                            {% endif %}
+                        </h5>
+                    </div>
+
+                    <!-- Action buttons based on role -->
+                    <div>
+                        {% if user.is_authenticated and user.is_candidate %}
+                            {% if has_applied %}
+                                <button class="btn btn-outline-success btn-lg disabled" disabled>
+                                    <i class="bi bi-check2-circle me-1"></i>Application Submitted
+                                </button>
+                            {% elif not job.is_active %}
+                                <button class="btn btn-secondary btn-lg disabled" disabled>
+                                    Job Closed
+                                </button>
+                            {% else %}
+                                <form method="post" action="{% url 'apply' job.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-primary btn-lg px-4">
+                                        <i class="bi bi-send me-1"></i>Apply Now
+                                    </button>
+                                </form>
+                            {% endif %}
+                        {% elif user.is_authenticated and user == job.recruiter %}
+                            <div class="btn-group">
+                                <a href="{% url 'job_applicants' job.id %}" class="btn btn-primary">
+                                    <i class="bi bi-people me-1"></i>Applicants ({{ job.applications.count }})
+                                </a>
+                                <a href="{% url 'edit_job' job.id %}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-pencil me-1"></i>Edit
+                                </a>
+                                {% if job.is_active %}
+                                    <form method="post" action="{% url 'close_job' job.id %}" class="d-inline" onsubmit="return confirm('Are you sure you want to close this job opening?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-danger">Close Job</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        {% elif not user.is_authenticated %}
+                            <a href="{% url 'login' %}?next={% url 'job_detail' job.id %}" class="btn btn-primary btn-lg px-4">
+                                Sign In to Apply
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <!-- Meta Highlights -->
+                <div class="row g-3 bg-light p-3 rounded-3 mb-4">
+                    <div class="col-sm-6 col-md-3">
+                        <small class="text-muted d-block fw-semibold">Location</small>
+                        <span><i class="bi bi-geo-alt-fill text-danger me-1"></i>{{ job.city }}</span>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <small class="text-muted d-block fw-semibold">Monthly Salary</small>
+                        <span>
+                            {% if job.salary_min or job.salary_max %}
+                                PKR {{ job.salary_min|default:"-" }} - {{ job.salary_max|default:"-" }}
+                            {% else %}
+                                Market Competitive
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <small class="text-muted d-block fw-semibold">Experience</small>
+                        <span><i class="bi bi-briefcase-fill text-primary me-1"></i>{{ job.experience_required }}+ Years</span>
+                    </div>
+                    <div class="col-sm-6 col-md-3">
+                        <small class="text-muted d-block fw-semibold">Posted Date</small>
+                        <span><i class="bi bi-calendar3 me-1"></i>{{ job.created_at|date:"M d, Y" }}</span>
+                    </div>
+                </div>
+
+                <!-- Skills -->
+                {% if job.skills %}
+                    <div class="mb-4">
+                        <h5 class="fw-bold mb-2">Required Skills</h5>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for s in job.skills.split %}
+                                <span class="badge bg-secondary-subtle text-secondary px-3 py-2 fs-6">{{ s|cut:"," }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Description -->
+                <div class="mb-4">
+                    <h5 class="fw-bold mb-3">Job Description</h5>
+                    <div class="text-secondary lh-lg" style="white-space: pre-line;">
+                        {{ job.description }}
+                    </div>
+                </div>
+
+                <!-- Footer Apply Callout -->
+                {% if user.is_authenticated and user.is_candidate and not has_applied and job.is_active %}
+                    <div class="p-4 bg-primary-subtle rounded-3 text-center mt-5">
+                        <h5 class="fw-bold text-primary mb-2">Ready to apply for this role?</h5>
+                        <p class="text-muted mb-3">Your stored CV will be sent directly to the hiring team.</p>
+                        <form method="post" action="{% url 'apply' job.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary btn-lg px-5">Submit Application</button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

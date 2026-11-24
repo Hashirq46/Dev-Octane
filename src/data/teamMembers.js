@@ -1,0 +1,66 @@
+// src/data/teamMembers.js
+export const teamMembers = [
+  {
+    name: 'Addan Mughal',
+    role: 'Team Leader & Marketing',
+    desc: 'Leadership, Team Coordination, Strategic Planning and Digital Marketing',
+    img: '/team/member1.jpeg',
+    linkedin: 'https://www.linkedin.com/in/addan-mughal-8a5548451/',
+  },
+  {
+    name: 'Hashir Qureshi',
+    role: 'Full Stack Developer',
+    desc: 'Frontend & Backend Development, Python, C++, Java, SQL, Data Analytics and Power BI',
+    img: '/team/member3.jpeg',
+    linkedin: 'https://www.linkedin.com/in/hashir-qureshi-803235347/',
+  },
+  {
+    name: 'Basit Ali Kiani',
+    role: 'Frontend Developer',
+    desc: 'React.js, JavaScript, Responsive Web Design and UI Implementation',
+    img: '/team/member2.jpg',
+    linkedin: 'https://www.linkedin.com/in/basit-ali-kayani-182074369/',
+  },
+  {
+    name: 'Muhammad Wajaht Javed',
+    role: 'Management & Marketing',
+    desc: 'Business Development, Marketing Strategies, Client Relations and Team Management',
+    img: '/team/member4.jpg',
+    linkedin: 'https://www.linkedin.com/in/m-wajahat-javed-971833347/',
+  },
+  {
+    name: 'Zeeshan Ahmed',
+    role: 'QA Analyst & Social Media Lead',
+    desc: 'Software Testing, Quality Assurance, Bug Tracking and Social Media Management',
+    img: '/team/member5.jpg',
+    linkedin: 'https://www.linkedin.com/in/zeeshan-ahmed-artificial-intelligence/',
+  },
+  {
+    name: 'Shehla Ibara',
+    role: 'UI/UX Designer',
+    desc: 'User Interface Design, User Experience, Wireframing and Interactive Prototyping',
+    img: '/team/member6.jpg',
+    linkedin:'https://www.linkedin.com/in/shehla-ibrar-b095b824a/',
+  },
+  {
+    name: 'Sheikh Hasnain Khalid',
+    role: 'FullStack Developer',
+    desc: 'Frontend Development, Backend Integration, Database Management and API Development',
+    img: '/team/member7.jpg',
+    linkedin: 'https://www.linkedin.com/in/sheikh-hasnain-khalid-8a5548451/',
+  },
+  {
+    name: 'Haris Zaffer',
+    role: 'DevOps & Deployment Engineer',
+    desc: 'Cloud Infrastructure, Server Management, CI/CD Pipelines and Application Deployment',
+    img: '/team/member8.jpg',
+    linkedin: 'https://www.linkedin.com/in/haris-zafar-814588347/',
+  },
+  {
+    name: 'Asma Ashraf',
+    role: 'UI/UX Designer',
+    desc: 'Visual Design, User Research, Wireframing and Responsive Interface Design',
+    img: '/team/member9.jpg',
+    linkedin: 'https://www.linkedin.com/in/asma-ashraf-b42181430/q',
+  },
+];

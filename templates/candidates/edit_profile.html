@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Profile — JobPortal{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                <h4 class="mb-0 fw-bold"><i class="bi bi-pencil-square text-primary me-2"></i>Edit Candidate Profile</h4>
+                <a href="{% url 'candidate_dashboard' %}" class="btn btn-sm btn-outline-secondary">Back to Dashboard</a>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for err in form.non_field_errors %}{{ err }}<br>{% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <!-- Upload New CV Alert Box -->
+                    <div class="card bg-light border-primary mb-4">
+                        <div class="card-body p-3">
+                            <h6 class="fw-bold text-primary mb-2"><i class="bi bi-cloud-arrow-up-fill me-1"></i>Upload New CV</h6>
+                            <p class="small text-muted mb-2">
+                                Uploading a new CV will trigger automatic AI parsing and open a prefilled review form before updating your profile.
+                            </p>
+                            {{ form.new_cv }}
+                            {% if profile.resume %}
+                                <div class="small text-muted mt-2">
+                                    Current attached CV: <a href="{% url 'download_resume' profile.id %}" class="text-decoration-none"><i class="bi bi-paperclip"></i> Download Current CV</a>
+                                </div>
+                            {% endif %}
+                            {% if form.new_cv.errors %}
+                                <div class="text-danger small mt-1">{{ form.new_cv.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold text-secondary mb-3">1. Personal & Contact Details</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label for="{{ form.full_name.id_for_label }}" class="form-label fw-semibold">Full Name *</label>
+                            {{ form.full_name }}
+                            {% if form.full_name.errors %}
+                                <div class="text-danger small mt-1">{{ form.full_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.phone.id_for_label }}" class="form-label fw-semibold">Phone Number</label>
+                            {{ form.phone }}
+                            {% if form.phone.errors %}
+                                <div class="text-danger small mt-1">{{ form.phone.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.city.id_for_label }}" class="form-label fw-semibold">City</label>
+                            {{ form.city }}
+                            {% if form.city.errors %}
+                                <div class="text-danger small mt-1">{{ form.city.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.experience_years.id_for_label }}" class="form-label fw-semibold">Years of Experience</label>
+                            {{ form.experience_years }}
+                            {% if form.experience_years.errors %}
+                                <div class="text-danger small mt-1">{{ form.experience_years.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-12">
+                            <label for="{{ form.headline.id_for_label }}" class="form-label fw-semibold">Professional Headline</label>
+                            {{ form.headline }}
+                            {% if form.headline.errors %}
+                                <div class="text-danger small mt-1">{{ form.headline.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-12">
+                            <label for="{{ form.skills.id_for_label }}" class="form-label fw-semibold">Skills (comma-separated)</label>
+                            {{ form.skills }}
+                            {% if form.skills.errors %}
+                                <div class="text-danger small mt-1">{{ form.skills.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <!-- Education Formset -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold text-secondary mb-0">2. Education</h5>
+                        <button type="button" class="btn btn-sm btn-outline-primary" id="addEduBtn">
+                            <i class="bi bi-plus-lg me-1"></i>Add Education
+                        </button>
+                    </div>
+
+                    {{ edu.management_form }}
+                    <div id="eduContainer">
+                        {% for f in edu %}
+                            <div class="card bg-light border-0 mb-3 edu-row">
+                                <div class="card-body p-3">
+                                    <div class="row g-2 align-items-center">
+                                        <div class="col-md-4">
+                                            <label class="form-label small fw-semibold text-muted mb-1">Degree</label>
+                                            {{ f.degree }}
+                                        </div>
+                                        <div class="col-md-5">
+                                            <label class="form-label small fw-semibold text-muted mb-1">Institute</label>
+                                            {{ f.institute }}
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label class="form-label small fw-semibold text-muted mb-1">Year</label>
+                                            {{ f.year }}
+                                        </div>
+                                        <div class="col-md-1 text-center pt-md-3">
+                                            {% if edu.can_delete %}
+                                                <div class="form-check d-inline-block" title="Delete">
+                                                    {{ f.DELETE }}
+                                                    <label class="form-check-label text-danger small"><i class="bi bi-trash"></i></label>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <hr class="my-4">
+
+                    <!-- Work Experience Formset -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold text-secondary mb-0">3. Work Experience</h5>
+                        <button type="button" class="btn btn-sm btn-outline-primary" id="addExpBtn">
+                            <i class="bi bi-plus-lg me-1"></i>Add Experience
+                        </button>
+                    </div>
+
+                    {{ exp.management_form }}
+                    <div id="expContainer">
+                        {% for f in exp %}
+                            <div class="card bg-light border-0 mb-3 exp-row">
+                                <div class="card-body p-3">
+                                    <div class="row g-2 mb-2 align-items-center">
+                                        <div class="col-md-4">
+                                            <label class="form-label small fw-semibold text-muted mb-1">Job Title</label>
+                                            {{ f.title }}
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label small fw-semibold text-muted mb-1">Company</label>
+                                            {{ f.company }}
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="form-label small fw-semibold text-muted mb-1">Period</label>
+                                            <div class="d-flex gap-1">
+                                                {{ f.start }}
+                                                {{ f.end }}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1 text-center pt-md-3">
+                                            {% if exp.can_delete %}
+                                                <div class="form-check d-inline-block" title="Delete">
+                                                    {{ f.DELETE }}
+                                                    <label class="form-check-label text-danger small"><i class="bi bi-trash"></i></label>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <label class="form-label small fw-semibold text-muted mb-1">Description</label>
+                                            {{ f.description }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                        <a href="{% url 'candidate_dashboard' %}" class="btn btn-light border px-4">Cancel</a>
+                        <button type="submit" class="btn btn-primary btn-lg px-5">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function setupFormsetAdd(btnId, containerId, prefix) {
+        const btn = document.getElementById(btnId);
+        const container = document.getElementById(containerId);
+        const totalFormsInput = document.getElementById(`id_${prefix}-TOTAL_FORMS`);
+
+        if (!btn || !container || !totalFormsInput) return;
+
+        btn.addEventListener('click', function() {
+            const currentCount = parseInt(totalFormsInput.value, 10);
+            const rows = container.querySelectorAll(`.${prefix}-row`);
+            if (rows.length === 0) return;
+
+            const templateRow = rows[0].cloneNode(true);
+            const regex = new RegExp(`${prefix}-(\\d+)`, 'g');
+
+            templateRow.innerHTML = templateRow.innerHTML.replace(regex, `${prefix}-${currentCount}`);
+            templateRow.querySelectorAll('input, textarea').forEach(el => {
+                if (el.type === 'checkbox') {
+                    el.checked = false;
+                } else {
+                    el.value = '';
+                }
+            });
+
+            container.appendChild(templateRow);
+            totalFormsInput.value = currentCount + 1;
+        });
+    }
+
+    setupFormsetAdd('addEduBtn', 'eduContainer', 'edu');
+    setupFormsetAdd('addExpBtn', 'expContainer', 'exp');
+</script>
+{% endblock %}

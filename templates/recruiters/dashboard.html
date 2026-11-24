@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Recruiter Dashboard — JobPortal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Verification Status Banner -->
+    <div class="col-12 mb-4">
+        {% if is_verified %}
+            <div class="alert alert-success d-flex align-items-center justify-content-between p-3 border-0 shadow-sm" role="alert">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-patch-check-fill fs-2 me-3 text-success"></i>
+                    <div>
+                        <h5 class="alert-heading fw-bold mb-1">Company Verified</h5>
+                        <p class="mb-0">Your NTN and SECP credentials are verified. You can post jobs and your jobs display the <strong>Verified badge</strong>.</p>
+                    </div>
+                </div>
+                <a href="{% url 'post_job' %}" class="btn btn-success fw-semibold"><i class="bi bi-plus-lg me-1"></i>Post a Job</a>
+            </div>
+        {% elif verification %}
+            {% if verification.status == 'pending' %}
+                <div class="alert alert-warning d-flex align-items-center justify-content-between p-3 border-0 shadow-sm" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-hourglass-split fs-2 me-3 text-warning"></i>
+                        <div>
+                            <h5 class="alert-heading fw-bold mb-1">Verification Under Review</h5>
+                            <p class="mb-0">Our administrative staff is reviewing your NTN/SECP documents. Job posting will be enabled once approved.</p>
+                        </div>
+                    </div>
+                    <a href="{% url 'verification_status' %}" class="btn btn-outline-dark btn-sm">View Status</a>
+                </div>
+            {% elif verification.status == 'rejected' %}
+                <div class="alert alert-danger d-flex align-items-center justify-content-between p-3 border-0 shadow-sm" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-x-circle-fill fs-2 me-3 text-danger"></i>
+                        <div>
+                            <h5 class="alert-heading fw-bold mb-1">Verification Needs Changes</h5>
+                            <p class="mb-0">Your submitted company credentials could not be approved. Please review reviewer notes and resubmit.</p>
+                        </div>
+                    </div>
+                    <a href="{% url 'verification_status' %}" class="btn btn-danger btn-sm">Read Reviewer Note</a>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="alert alert-info d-flex align-items-center justify-content-between p-3 border-0 shadow-sm" role="alert">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-shield-exclamation fs-2 me-3 text-info"></i>
+                    <div>
+                        <h5 class="alert-heading fw-bold mb-1">Verify Your Company to Post Jobs</h5>
+                        <p class="mb-0">Upload your NTN registration certificate and SECP incorporation certificate to unlock job postings.</p>
+                    </div>
+                </div>
+                <a href="{% url 'submit_verification' %}" class="btn btn-primary fw-semibold"><i class="bi bi-upload me-1"></i>Start Verification</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-4 text-center">
+                <div class="display-5 fw-bold text-primary mb-1">{{ total_jobs }}</div>
+                <div class="text-muted fw-semibold">Total Jobs Posted</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-4 text-center">
+                <div class="display-5 fw-bold text-success mb-1">{{ active_jobs }}</div>
+                <div class="text-muted fw-semibold">Active Openings</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-4 text-center">
+                <div class="display-5 fw-bold text-warning mb-1">{{ total_applicants }}</div>
+                <div class="text-muted fw-semibold">Total Candidate Applications</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Navigation -->
+    <div class="col-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold">Recruiter Actions</h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <a href="{% url 'my_jobs' %}" class="btn btn-outline-secondary w-100 p-3 text-start">
+                            <i class="bi bi-list-task fs-4 d-block mb-1 text-primary"></i>
+                            <span class="fw-bold d-block">Manage Jobs & Applicants</span>
+                            <small class="text-muted">View applicants, change statuses, or close jobs.</small>
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        {% if is_verified %}
+                            <a href="{% url 'post_job' %}" class="btn btn-outline-success w-100 p-3 text-start">
+                                <i class="bi bi-plus-circle-fill fs-4 d-block mb-1 text-success"></i>
+                                <span class="fw-bold d-block">Post a New Job</span>
+                                <small class="text-muted">Create a job opening visible to job seekers across Pakistan.</small>
+                            </a>
+                        {% else %}
+                            <a href="{% url 'submit_verification' %}" class="btn btn-outline-warning w-100 p-3 text-start">
+                                <i class="bi bi-shield-lock-fill fs-4 d-block mb-1 text-warning"></i>
+                                <span class="fw-bold d-block">Submit Verification</span>
+                                <small class="text-muted">Required before posting jobs on the platform.</small>
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-4">
+                        <a href="{% url 'verification_status' %}" class="btn btn-outline-info w-100 p-3 text-start">
+                            <i class="bi bi-file-earmark-check-fill fs-4 d-block mb-1 text-info"></i>
+                            <span class="fw-bold d-block">Verification Status</span>
+                            <small class="text-muted">Check review details and registered credentials.</small>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

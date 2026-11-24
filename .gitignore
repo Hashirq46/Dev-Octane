@@ -1,0 +1,30 @@
+# Python / Django
+*.py[cod]
+__pycache__/
+*.so
+.Python
+env/
+.venv/
+venv/
+ENV/
+*.sqlite3
+db.sqlite3-journal
+
+# Media & Uploads
+private_media/
+media/
+staticfiles/
+
+# Environment & IDE
+.env
+.idea/
+.vscode/
+*.swp
+*.log
+
+# Generated frontend output
+node_modules/
+dist/
+build/
+coverage/
+

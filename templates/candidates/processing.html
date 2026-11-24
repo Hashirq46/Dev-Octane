@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Processing Your CV — JobPortal{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7 col-lg-6 text-center">
+        <div class="card shadow-sm border-0 py-5 px-4">
+            <div class="card-body">
+                <div class="spinner-border text-primary mb-4" style="width: 3.5rem; height: 3.5rem;" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <h3 class="fw-bold mb-3">Parsing Your CV with AI</h3>
+                <p class="text-muted mb-4">
+                    Our AI is extracting your contact information, skills, education, and work history. This usually takes just a few seconds...
+                </p>
+                <div class="progress mb-3" style="height: 8px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 100%"></div>
+                </div>
+                <p class="small text-muted">
+                    This page will automatically refresh once processing is ready.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const draftId = "{{ draft.id }}";
+    function checkStatus() {
+        fetch(`/parsing/draft-status/${draftId}/`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.state !== 'pending') {
+                    window.location.reload();
+                } else {
+                    setTimeout(checkStatus, 2000);
+                }
+            })
+            .catch(() => {
+                setTimeout(checkStatus, 3000);
+            });
+    }
+    setTimeout(checkStatus, 2000);
+</script>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}My Job Postings — JobPortal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h4 class="mb-0 fw-bold"><i class="bi bi-card-checklist text-primary me-2"></i>My Job Postings</h4>
+                {% if user.is_verified_recruiter %}
+                    <a href="{% url 'post_job' %}" class="btn btn-primary btn-sm">
+                        <i class="bi bi-plus-lg me-1"></i>Post a Job
+                    </a>
+                {% endif %}
+            </div>
+            <div class="card-body p-0">
+                {% if jobs %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Job Title</th>
+                                    <th>City & Type</th>
+                                    <th>Date Posted</th>
+                                    <th>Applicants</th>
+                                    <th>Status</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for job in jobs %}
+                                    <tr>
+                                        <td>
+                                            <a href="{% url 'job_detail' job.id %}" class="fw-bold text-dark text-decoration-none">
+                                                {{ job.title }}
+                                            </a>
+                                            {% if job.category %}
+                                                <div class="small text-muted">{{ job.category }}</div>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span>{{ job.city }}</span>
+                                            <div class="small text-muted">{{ job.get_job_type_display }}</div>
+                                        </td>
+                                        <td class="text-muted small">{{ job.created_at|date:"M d, Y" }}</td>
+                                        <td>
+                                            <a href="{% url 'job_applicants' job.id %}" class="btn btn-sm btn-outline-primary position-relative">
+                                                <i class="bi bi-people me-1"></i>Applicants
+                                                <span class="badge bg-primary text-white ms-1">{{ job.applicant_count }}</span>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            {% if job.is_active %}
+                                                <span class="badge bg-success">Active</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Closed</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-end">
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="{% url 'edit_job' job.id %}" class="btn btn-outline-secondary" title="Edit">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                {% if job.is_active %}
+                                                    <form method="post" action="{% url 'close_job' job.id %}" class="d-inline" onsubmit="return confirm('Close this job?');">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-outline-danger" title="Close Job">
+                                                            <i class="bi bi-slash-circle"></i>
+                                                        </button>
+                                                    </form>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="p-5 text-center text-muted">
+                        <i class="bi bi-inbox fs-1 d-block mb-2 text-secondary"></i>
+                        <h5>No jobs posted yet</h5>
+                        <p class="text-muted">Start finding talent by creating your first job posting.</p>
+                        {% if user.is_verified_recruiter %}
+                            <a href="{% url 'post_job' %}" class="btn btn-primary">Post a Job</a>
+                        {% else %}
+                            <a href="{% url 'submit_verification' %}" class="btn btn-warning">Verify Company to Post</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

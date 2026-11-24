@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Company Verification Status — JobPortal{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h4 class="mb-0 fw-bold"><i class="bi bi-shield-lock-fill text-primary me-2"></i>Verification Status</h4>
+                {% if v %}
+                    {% if v.status == 'approved' %}
+                        <span class="badge bg-success fs-6"><i class="bi bi-check-circle-fill me-1"></i>Approved</span>
+                    {% elif v.status == 'rejected' %}
+                        <span class="badge bg-danger fs-6"><i class="bi bi-x-circle-fill me-1"></i>Rejected</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark fs-6"><i class="bi bi-hourglass-split me-1"></i>Under Review</span>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div class="card-body p-4">
+                {% if not v %}
+                    <div class="text-center py-4">
+                        <div class="display-4 text-muted mb-3"><i class="bi bi-shield-x"></i></div>
+                        <h5>No Verification Submitted</h5>
+                        <p class="text-muted">You have not submitted your company credentials yet.</p>
+                        <a href="{% url 'submit_verification' %}" class="btn btn-primary mt-2">Submit Documents Now</a>
+                    </div>
+                {% else %}
+                    {% if v.status == 'approved' %}
+                        <div class="alert alert-success border-0 mb-4 p-3">
+                            <h5 class="fw-bold alert-heading mb-1"><i class="bi bi-patch-check-fill me-2"></i>Company Verified</h5>
+                            <p class="mb-2">Your company credentials have been verified by our compliance team. Your jobs are published with a <strong>Verified badge</strong>.</p>
+                            <a href="{% url 'post_job' %}" class="btn btn-success fw-semibold"><i class="bi bi-plus-lg me-1"></i>Post a Job</a>
+                        </div>
+                    {% elif v.status == 'rejected' %}
+                        <div class="alert alert-danger border-0 mb-4 p-3">
+                            <h5 class="fw-bold alert-heading mb-1"><i class="bi bi-exclamation-triangle-fill me-2"></i>Verification Not Approved</h5>
+                            <p class="mb-2"><strong>Reason / Reviewer Note:</strong></p>
+                            <div class="bg-white p-3 rounded border border-danger-subtle text-danger-emphasis mb-3">
+                                {{ v.reviewer_note|default:"Please review your details and re-upload valid company documents." }}
+                            </div>
+                            <p class="small text-muted mb-3">You can correct your documents and resubmit for review.</p>
+                            <a href="{% url 'submit_verification' %}" class="btn btn-danger"><i class="bi bi-arrow-repeat me-1"></i>Resubmit Verification</a>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning border-0 mb-4 p-3">
+                            <h5 class="fw-bold alert-heading mb-1"><i class="bi bi-clock-history me-2"></i>Pending Staff Review</h5>
+                            <p class="mb-0">Your documents were received and are undergoing manual cross-referencing with official records. We will notify you by email once completed.</p>
+                        </div>
+                    {% endif %}
+
+                    <h5 class="fw-bold text-secondary mb-3">Submitted Details</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered mb-4">
+                            <tbody>
+                                <tr>
+                                    <th class="bg-light" style="width: 35%;">Company Name</th>
+                                    <td>
+                                        {{ v.company_name }}
+                                        {% if v.status == 'approved' %}
+                                            <span class="badge bg-success ms-1">✔ Verified</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">NTN</th>
+                                    <td>
+                                        {{ v.ntn }}
+                                        {% if v.ntn_on_atl %}
+                                            <span class="badge bg-info-subtle text-info-emphasis ms-1">On Active Taxpayer List</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">SECP CUIN</th>
+                                    <td>{{ v.cuin|default:"Sole Proprietor (N/A)" }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">Address</th>
+                                    <td>{{ v.address|default:"—" }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">City</th>
+                                    <td>{{ v.city|default:"—" }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">Submission Date</th>
+                                    <td>{{ v.created_at|date:"F d, Y H:i" }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">Certificates</th>
+                                    <td>
+                                        {% if v.ntn_cert %}
+                                            <a href="{% url 'download_certificate' v.id 'ntn' %}" class="btn btn-sm btn-outline-secondary me-2">
+                                                <i class="bi bi-file-earmark-pdf me-1"></i>NTN Cert
+                                            </a>
+                                        {% endif %}
+                                        {% if v.incorporation_cert %}
+                                            <a href="{% url 'download_certificate' v.id 'secp' %}" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-file-earmark-pdf me-1"></i>SECP Cert
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'recruiter_dashboard' %}" class="btn btn-outline-secondary">Back to Dashboard</a>
+                        {% if v.status != 'pending' %}
+                            <a href="{% url 'submit_verification' %}" class="btn btn-outline-primary">Update Verification</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
