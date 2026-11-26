@@ -17,9 +17,9 @@ export default function Footer() {
         {/* Social icons */}
         <div className="flex space-x-4">
           <a href="#" className="text-accent hover:text-white"><Linkedin className="w-5 h-5" /></a>
-          <a href="#" className="text-accent hover:text-white"><Instagram className="w-5 h-5" /></a>
+          <a href="https://www.instagram.com/team_dev_octane_09?hvrq=MWJqbGhhMHVzcXR4Zg%3D%3D&utm_source=qr" className="text-accent hover:text-white"><Instagram className="w-5 h-5" /></a>
           <a href="#" className="text-accent hover:text-white"><Github className="w-5 h-5" /></a>
-          <a href="#" className="text-accent hover:text-white"><Facebook className="w-5 h-5" /></a>
+          <a href="https://www.facebook.com/share/18wBmB7vbc/" className="text-accent hover:text-white"><Facebook className="w-5 h-5" /></a>
         </div>
       </div>
       <div className="mt-6 text-center text-xs text-secondaryText">
